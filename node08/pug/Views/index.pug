@@ -6,4 +6,24 @@ html
     h1 Hello from PUG in h1 tag...
     | Subtitle Message...
     br
+    hr
+    - var jobTitle = 'Customer Data Developer'
+    - var jobDesc = 'Product'
+    h3 Job Title = #{jobTitle.toUpperCase()}
+    h3 Job Description = #{jobDesc.toLowerCase()}
+    br
+    hr
+    - var number = 20
+    //- if !number  = unless number
+    if !number
+      |Number doesn't exist...
+    else if number === 10
+      | The number is ten ....
+    else 
+      | The number is not ten ...
+
+    hr
+    ul
+      each val, index in ['A', 'B', 'C', 'D', 'E', 'F']
+        li= val + ' ' + index
     include footer.pug
