@@ -1,19 +1,39 @@
 const express = require('express')
 const app = express()
 const port = 3000
-// GET POST PUT DELETE ---> ALL
-app.get('/', (req, res) => res.send('Hello World from HOME!'))
-// app.get('/contact', (req, res) => res.send('Hello World from CONTACT!'))
+app.set('view engine', 'pug')
+/*
+app.use((request, middleRes, next)=>{
+  const isAuthorized = false;
+  if(isAuthorized) {
+    next()
+  } else {
+    middleRes.send('You have no authorization to see this page. Please Login... Request from '+ request.url)
+  }
+})
 
-// ? -> optional
-// app.get('/co?nta?ct', (req, res) => res.send('Hello World from CONTACT!'))
-//app.get('/co(nta)?ct', (req, res) => res.send('Hello World from CONTACT!'))
+*/
 
-// * -> anything
-//app.get('/con*tact', (req, res) => res.send('Hello World from CONTACT!'))
+const isAuth = require('./helpers/isAuth')
+//app.use('/about', isAuth)   // Add middleware to only about.js
+//app.use(isAuth) // Add middleware to all pages
 
-// + -> repeat character
-app.get('/conta+ct', (req, res) => res.send('Hello World from CONTACT!'))
+const home = require('./routers/home')
+app.use('/', home)
+const user = require('./routers/user')
+app.use('/', user)
+const about = require('./routers/about')
+app.use('/', about)
+const contact = require('./routers/contact')
+app.use('/api/', contact)
+
+app.use((error, request, errMidRes, next)=>{
+  errMidRes.status(error.status);
+  errMidRes.render('error.pug',{message:error.message, status:error.status})
+})
 
 
-app.listen(port, () => console.log(`Example app listening on port port!`))
+
+
+//app.listen(port)
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
