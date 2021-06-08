@@ -7,7 +7,18 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var newsRouter = require('./routes/news');
+var postsRouter = require('./routes/post.routes');
 
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost:27017/local', {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true
+})/*
+.then(()=>{console.log('MongoDB connection was successful...')})
+.catch((error)=>{console.log('MongoDB connection was failed. Details: ', error)})
+*/
+mongoose.connection.on('open',()=>{console.log('MongoDB connection was successful...')})
+mongoose.connection.on('error',(err)=>{console.log('MongoDB connection was failed. Details: ', err)} )
 var app = express();
 
 // view engine setup
@@ -23,6 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/news', newsRouter);
+app.use('/posts', postsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
