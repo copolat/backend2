@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const PostModel = require('../models/Post')
-
+// CRUD
 // Created by node-express-post snippet
 router.post('/', function (req, res) {
   const myPostModel = new PostModel({
@@ -95,4 +95,64 @@ router.put('/updateMany',(req, res)=>{
   .catch((error)=>{res.json(error)})
 })
 
+//UpdateOne()
+router.put('/updateOne',(req, res)=>{
+  PostModel.updateOne({isActive:false},{title:'Title has been updated with UPDATEONE()....'})
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)})
+})
+
+// FindByIdAndUpdate()
+router.put('/findByIdAndUpdate', (req, res)=>{
+  PostModel.findByIdAndUpdate('60c02cd48620cd314ccadef6',{title:'Ttitle has been updated with findByIdAndUpdate', isActive: true})
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)})
+})
+
+// Delete()
+router.delete('/deleteMany',(req,res)=>{
+  PostModel.deleteMany({isActive:false})
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)}) 
+})
+
+// DeleteOne()
+router.delete('/deleteOne',(req,res)=>{
+  PostModel.deleteOne({title:"My Title from request body"})
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)}) 
+})
+
+// FindByIdAndDelete()
+router.delete('/findByIdAndDelete',(req,res)=>{
+  PostModel.findByIdAndDelete('60bedf420f0b1f2bb432fa72')
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)}) 
+})
+
+// FindByIdAndRemove()
+router.delete('/findByIdAndRemove',(req,res)=>{
+  PostModel.findByIdAndRemove('60c00b013b9861227892b9e2')
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)}) 
+})
+
+// Update from request body
+router.put('/updateOneFromBody', (req, res)=>{
+  PostModel.updateOne({isActive:true},{title:req.body.title, isActive: req.body.isActive})
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)})
+})
+
+// SORT -LIMIT -SKIP
+// 1, asc, ascending  -> sorting
+// -1, desc, descending  -> sorting
+router.get('/sorting', (req, res)=>{
+  PostModel.find()
+  .sort({'meta.votes':'asc', 'subTitle':-1})
+  .limit(2)
+  .skip(1)
+  .then((data)=>{res.json(data)})
+  .catch((error)=>{res.json(error)})
+})
 module.exports = router
